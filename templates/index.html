@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Portal</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f3f4f6;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 900px;
+            height: 600px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .left {
+            width: 45%;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .left h1 {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        .left p {
+            line-height: 1.7;
+            font-size: 17px;
+        }
+
+        .right {
+            width: 55%;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .top-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .top-buttons button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .inactive {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        .form-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .form-box {
+            position: absolute;
+            width: 100%;
+            transition: 0.4s ease;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        input,
+        select {
+            padding: 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .submit-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #1d4ed8;
+        }
+
+        #login-form {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        #signup-form {
+            opacity: 0;
+            transform: translateX(100%);
+            pointer-events: none;
+        }
+
+        .show-signup #login-form {
+            opacity: 0;
+            transform: translateX(-100%);
+            pointer-events: none;
+        }
+
+        .show-signup #signup-form {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: all;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="left">
+            <h1>Job Portal</h1>
+            <p>
+                Find jobs, connect with employers, and build your career using
+                this Flask based Job Portal System.
+            </p>
+        </div>
+
+        <div class="right" id="right-panel">
+
+            <div class="top-buttons">
+                <button id="login-btn" class="active">Login</button>
+                <button id="signup-btn" class="inactive">Signup</button>
+            </div>
+
+            <div class="form-container">
+
+                <!-- LOGIN FORM -->
+                <div class="form-box" id="login-form">
+                    <form action="/login" method="POST">
+
+                        <input type="email" name="email" placeholder="Enter Email" required>
+
+                        <input type="password" name="password" placeholder="Enter Password" required>
+
+                        <button type="submit" class="submit-btn">
+                            Login
+                        </button>
+
+                    </form>
+                </div>
+
+
+                <!-- SIGNUP FORM -->
+                <div class="form-box" id="signup-form">
+                    <form action="/signup" method="POST">
+
+                        <input type="text" name="username" placeholder="Enter Username" required>
+
+                        <input type="email" name="email" placeholder="Enter Email" required>
+
+                        <input type="password" name="password" placeholder="Enter Password" required>
+
+                        <select name="role" required>
+                            <option value="">Select Role</option>
+                            <option value="job_seeker">Job Seeker</option>
+                            <option value="employer">Employer</option>
+                        </select>
+
+                        <button type="submit" class="submit-btn">
+                            Create Account
+                        </button>
+
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        const loginBtn = document.getElementById("login-btn");
+        const signupBtn = document.getElementById("signup-btn");
+        const panel = document.getElementById("right-panel");
+
+        signupBtn.addEventListener("click", () => {
+            panel.classList.add("show-signup");
+
+            signupBtn.classList.remove("inactive");
+            signupBtn.classList.add("active");
+
+            loginBtn.classList.remove("active");
+            loginBtn.classList.add("inactive");
+        });
+
+        loginBtn.addEventListener("click", () => {
+            panel.classList.remove("show-signup");
+
+            loginBtn.classList.remove("inactive");
+            loginBtn.classList.add("active");
+
+            signupBtn.classList.remove("active");
+            signupBtn.classList.add("inactive");
+        });
+
+    </script>
+
+</body>
+</html>
