@@ -124,11 +124,56 @@ def login():
     if user and check_password_hash(user.password_hash,password):
         session["user_id"] = user.id
         if user.role == "job_seeker":
-            return "WELCOME<YOU WILL FIND JOB HERE"
+            return redirect (url_for("job_seeker"))
         else: 
-            return "YOU WILL FIND YOUR EMPLOYEE HERE>>>>"
+            return redirect (url_for("employer"))
     else:
         return "Invalid EMAIL or PASSWORD"
+
+@app.route("/job_seeker")
+def job_seeker():
+    return render_template("job_seeker.html")
+
+
+@app.route("/job_seeker_profile",methods=["POST","GET"])
+def profile():
+    if not session:
+        return redirect (url_for("home"))
+    if request.method == "POST":
+        full_name = request.form.get("full_name")
+        skills = request.form.get("skills")
+        education = request.form.get("education")
+        resume = request.form.get("resume")
+
+        user_id = session.get("user_id")
+        add_database = Job_Seeker_Profiles(full_name=full_name,skills=skills,education=education,resume=resume,user_id=user_id)
+        db.session.add(add_database)
+        db.session.commit()
+        return redirect (url_for("job_seeker"))
+    return render_template("job_seeker_profile.html")
+
+@app.route("/job_seeker_logout")
+def logout():
+    session.clear()
+    return redirect (url_for("home"))
+
+@app.route("/employer")
+def employer():
+    return render_template("employer.html")
+
+@app.route("/employer_profile",methods=["POST"])
+def employer_profile():
+    if request.method == "POST":
+        company_name = request.form.get("company_name")
+        company_description = request.form.get("company_description")
+        website = request.form.get("website")
+
+        user_id = session.get("user_id")
+        add_database = Employer_Profiles(company_description=company_description,company_name=company_name,website=website,user_id=user_id)
+        db.session.add(add_database)
+        db.session.commit()
+    return render_template("employer_profile.html")
+
 
 if __name__ == "__main__":
     with app.app_context():
