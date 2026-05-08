@@ -139,17 +139,23 @@ def job_seeker():
 def profile():
     if not session:
         return redirect (url_for("home"))
-    if request.method == "POST":
-        full_name = request.form.get("full_name")
-        skills = request.form.get("skills")
-        education = request.form.get("education")
-        resume = request.form.get("resume")
+    user_id = session.get("user_id")
+    user_exsit = Job_Seeker_Profiles.query.filter_by(user_id=user_id).first()
+    if not user_exsit:
+    
+        if request.method == "POST":
+            full_name = request.form.get("full_name")
+            skills = request.form.get("skills")
+            education = request.form.get("education")
+            resume = request.form.get("resume")
 
-        user_id = session.get("user_id")
-        add_database = Job_Seeker_Profiles(full_name=full_name,skills=skills,education=education,resume=resume,user_id=user_id)
-        db.session.add(add_database)
-        db.session.commit()
-        return redirect (url_for("job_seeker"))
+            user_id = session.get("user_id")
+            add_database = Job_Seeker_Profiles(full_name=full_name,skills=skills,education=education,resume=resume,user_id=user_id)
+            db.session.add(add_database)
+            db.session.commit()
+            return redirect (url_for("job_seeker"))
+    else:
+        return "Job_seeker_profile Already exsits"
     return render_template("job_seeker_profile.html")
 
 @app.route("/job_seeker_logout")
@@ -163,19 +169,24 @@ def employer():
 
 @app.route("/employer_profile",methods=["POST","GET"])
 def employer_profile():
-    if request.method == "POST":
-        company_name = request.form.get("company_name")
-        company_description = request.form.get("company_description")
-        website = request.form.get("website")
+    user_id = session.get("user_id")
+    user_exsit = Employer_Profiles.query.filter_by(user_id=user_id).first()
+    if user_exsit == None:
+        if request.method == "POST":
+            company_name = request.form.get("company_name")
+            company_description = request.form.get("company_description")
+            website = request.form.get("website")
 
-        if website and not website.startswith(("http://", "https://")): ##written by AI(but understand the code)
-            website = "https://" + website ##written by Ai ##written by Ai(but understand the code)
+            if website and not website.startswith(("http://", "https://")): ##written by AI(but understand the code)
+                website = "https://" + website ##written by Ai ##written by Ai(but understand the code)
 
-        user_id = session.get("user_id")
-        add_database = Employer_Profiles(company_description=company_description,company_name=company_name,website=website,user_id=user_id)
-        db.session.add(add_database)
-        db.session.commit()
-        return redirect (url_for("employer"))
+            user_id = session.get("user_id")
+            add_database = Employer_Profiles(company_description=company_description,company_name=company_name,website=website,user_id=user_id)
+            db.session.add(add_database)
+            db.session.commit()
+            return redirect (url_for("employer"))
+    else:
+        return "Profile Already Exsit"
     return render_template("employer_profile.html")
 
 @app.route("/create_job",methods=["POST","GET"])
@@ -201,6 +212,12 @@ def create_job():
         db.session.commit()
         return redirect(url_for("employer"))
     return render_template("job_posting.html")
+
+@app.route("/logout")
+def employer_logout():
+    return redirect (url_for("home"))
+
+
 
 
 if __name__ == "__main__":
