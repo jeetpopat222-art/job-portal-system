@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employer Profile</title>
+    <title>Create Job Posting</title>
 
     <style>
 
@@ -25,7 +25,7 @@
 
         .container{
             width: 100%;
-            max-width: 750px;
+            max-width: 800px;
             background-color: white;
             padding: 40px;
             border-radius: 20px;
@@ -41,7 +41,6 @@
         .subtitle{
             color: #6b7280;
             margin-bottom: 35px;
-            line-height: 1.6;
         }
 
         form{
@@ -51,7 +50,8 @@
         }
 
         input,
-        textarea{
+        textarea,
+        select{
             width: 100%;
             padding: 15px;
             border: 1px solid #d1d5db;
@@ -61,16 +61,17 @@
 
         textarea{
             resize: none;
-            height: 140px;
+            height: 150px;
         }
 
         input:focus,
-        textarea:focus{
+        textarea:focus,
+        select:focus{
             outline: none;
             border-color: #2563eb;
         }
 
-        .save-btn{
+        .submit-btn{
             border: none;
             background-color: #2563eb;
             color: white;
@@ -82,7 +83,7 @@
             transition: 0.3s;
         }
 
-        .save-btn:hover{
+        .submit-btn:hover{
             background-color: #1d4ed8;
         }
 
@@ -93,36 +94,43 @@
 
     <div class="container">
 
-        <h1>Complete Company Profile</h1>
+        <h1>Create Job Posting</h1>
 
         <p class="subtitle">
-            Add your company details so job seekers can know more about your organization.
+            Post a new opportunity and start hiring talented candidates.
         </p>
 
-        <form action="/employer_profile" method="POST">
+        <form action="/create_job" method="POST">
 
             <input
                 type="text"
-                name="company_name"
-                placeholder="Enter Company Name"
+                name="title"
+                placeholder="Job Title"
                 required
             >
 
             <textarea
-                name="company_description"
-                placeholder="Describe your company, work culture, goals, etc."
+                name="description"
+                placeholder="Describe the role, responsibilities, requirements, etc."
                 required
             ></textarea>
 
             <input
-                type="text"
-                name="website"
-                placeholder="Enter Company Website (e.g. google.com or https://example.com)"
+                type="number"
+                name="salary"
+                placeholder="Salary"
                 required
             >
 
-            <button type="submit" class="save-btn">
-                Save Company Profile
+            <input
+                type="text"
+                name="location"
+                placeholder="Job Location"
+                required
+            >
+
+            <button type="submit" class="submit-btn">
+                Publish Job
             </button>
 
         </form>

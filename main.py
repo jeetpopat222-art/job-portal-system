@@ -25,9 +25,9 @@ class User(db.Model):
     role:Mapped[str] = mapped_column()
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
 
-    seeker_profile = relationship("Job_Seeker_Profiles", back_populates="user")
+    seeker_profile = relationship("Job_Seeker_Profiles", back_populates="user")##written by Ai
 
-    employer_profile = relationship("Employer_Profiles", back_populates="user")
+    employer_profile = relationship("Employer_Profiles", back_populates="user")##written by Ai
 
 
 
@@ -42,9 +42,9 @@ class Job_Seeker_Profiles(db.Model):
     education: Mapped[str] =mapped_column()
     resume: Mapped[str] = mapped_column()
 
-    user = relationship("User", back_populates="seeker_profile")
+    user = relationship("User", back_populates="seeker_profile")##written by Ai
 
-    applications = relationship("Applications", back_populates="job_seeker")
+    applications = relationship("Applications", back_populates="job_seeker")##written by Ai
 
 
 class Employer_Profiles(db.Model):
@@ -57,9 +57,9 @@ class Employer_Profiles(db.Model):
     company_description:Mapped[str] = mapped_column()
     website:Mapped[str] = mapped_column()
 
-    user = relationship("User", back_populates="employer_profile")
+    user = relationship("User", back_populates="employer_profile")##written by Ai
 
-    jobs = relationship("Job_Posting", back_populates="employer")
+    jobs = relationship("Job_Posting", back_populates="employer")##written by Ai
 
 
 class Job_Posting(db.Model):
@@ -72,11 +72,11 @@ class Job_Posting(db.Model):
     description: Mapped[str] = mapped_column()
     salary: Mapped[int] = mapped_column()
     location: Mapped[str] = mapped_column()
-    created_at: Mapped[datetime] = mapped_column()
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
 
-    employer = relationship("Employer_Profiles", back_populates="jobs")
+    employer = relationship("Employer_Profiles", back_populates="jobs")##written by Ai
 
-    applications = relationship("Applications", back_populates="job")
+    applications = relationship("Applications", back_populates="job")##written by Ai
 
 
 class Applications(db.Model):
@@ -90,12 +90,12 @@ class Applications(db.Model):
     applied_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
     
 
-    job = relationship("Job_Posting", back_populates="applications")
+    job = relationship("Job_Posting", back_populates="applications")##written by Ai
 
     job_seeker = relationship(
         "Job_Seeker_Profiles",
         back_populates="applications"
-    )
+    )##written by Ai
 
 @app.route("/",methods=["GET","POST"])
 def home():
@@ -161,18 +161,46 @@ def logout():
 def employer():
     return render_template("employer.html")
 
-@app.route("/employer_profile",methods=["POST"])
+@app.route("/employer_profile",methods=["POST","GET"])
 def employer_profile():
     if request.method == "POST":
         company_name = request.form.get("company_name")
         company_description = request.form.get("company_description")
         website = request.form.get("website")
 
+        if website and not website.startswith(("http://", "https://")): ##written by AI(but understand the code)
+            website = "https://" + website ##written by Ai ##written by Ai(but understand the code)
+
         user_id = session.get("user_id")
         add_database = Employer_Profiles(company_description=company_description,company_name=company_name,website=website,user_id=user_id)
         db.session.add(add_database)
         db.session.commit()
+        return redirect (url_for("employer"))
     return render_template("employer_profile.html")
+
+@app.route("/create_job",methods=["POST","GET"])
+def create_job():
+    if request.method == "POST":
+        job_title = request.form.get("title")
+        description = request.form.get("description")
+        salary = request.form.get("salary")
+        location = request.form.get("location")
+
+
+        user_id = session.get("user_id")
+        current_employer = Employer_Profiles.query.filter_by(user_id=user_id).first() ##genreted using Ai (but understand the code)
+
+        add_database = Job_Posting(
+            title=job_title,
+            description=description,
+            salary=salary,
+            location=location,
+            employer_id=current_employer.id
+        )
+        db.session.add(add_database)
+        db.session.commit()
+        return redirect(url_for("employer"))
+    return render_template("job_posting.html")
 
 
 if __name__ == "__main__":
