@@ -132,6 +132,9 @@ def login():
 
 @app.route("/job_seeker")
 def job_seeker():
+    user_id = session.get("user_id")
+    if not user_id:
+        return redirect(url_for("home"))
     return render_template("job_seeker.html")
 
 
@@ -157,6 +160,24 @@ def profile():
     else:
         return "Job_seeker_profile Already exsits"
     return render_template("job_seeker_profile.html")
+
+@app.route("/application",methods=["POST","GET"])
+def job_application():
+    user_id = session.get("user_id")
+    if not user_id:
+        return redirect (url_for("home"))
+    jobs = Job_Posting.query.all()
+    if request.method == "POST":
+          job_id = request.form.get("job_id")
+          job_seeker_id = Job_Seeker_Profiles.query.filter_by(user_id=user_id).first()
+          add_database = Applications(job_id=job_id,job_seeker_id=job_seeker_id.id,status="applied")
+          db.session.add(add_database)
+          db.session.commit()
+
+    return render_template("job_application.html",jobs=jobs)
+
+
+
 
 @app.route("/job_seeker_logout")
 def logout():
@@ -212,6 +233,7 @@ def create_job():
         db.session.commit()
         return redirect(url_for("employer"))
     return render_template("job_posting.html")
+
 
 @app.route("/logout")
 def employer_logout():
