@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Applications</title>
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background-color: #f3f4f6;
+            padding: 40px;
+        }
+
+        h1{
+            margin-bottom: 30px;
+            color: #111827;
+        }
+
+        .applications-container{
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(350px,1fr));
+            gap: 25px;
+        }
+
+        .application-card{
+            background-color: white;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .application-card h2{
+            margin-bottom: 12px;
+            color: #2563eb;
+        }
+
+        .application-card p{
+            margin-bottom: 10px;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        .resume-btn{
+            display: inline-block;
+            margin-top: 15px;
+            text-decoration: none;
+            background-color: #2563eb;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <h1>Job Applications</h1>
+
+    <div class="applications-container">
+
+        {% for application in applications %}
+
+        <div class="application-card">
+
+            <h2>
+                {{ application.job_seeker.full_name }}
+            </h2>
+
+            <p>
+                <strong>Skills:</strong>
+                {{ application.job_seeker.skills }}
+            </p>
+
+            <p>
+                <strong>Education:</strong>
+                {{ application.job_seeker.education }}
+            </p>
+
+            <p>
+                <strong>Applied For:</strong>
+                {{ application.job.title }}
+            </p>
+
+            <p>
+                <strong>Status:</strong>
+                {{ application.status }}
+            </p>
+
+            <a
+                href="{{ application.job_seeker.resume }}"
+                target="_blank"
+                class="resume-btn"
+            >
+                View Resume
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</body>
+</html>

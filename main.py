@@ -163,20 +163,26 @@ def profile():
 
 @app.route("/application",methods=["POST","GET"])
 def job_application():
-    user_id = session.get("user_id")
-    if not user_id:
-        return redirect (url_for("home"))
+    user_id = session.get("user_id") 
+
+    if not user_id: 
+        return redirect (url_for("home")) 
+    
     jobs = Job_Posting.query.all()
+
     if request.method == "POST":
-          job_id = request.form.get("job_id")
-          job_seeker_id = Job_Seeker_Profiles.query.filter_by(user_id=user_id).first()
-          add_database = Applications(job_id=job_id,job_seeker_id=job_seeker_id.id,status="applied")
-          db.session.add(add_database)
-          db.session.commit()
+        job_id = request.form.get("job_id")
+
+        cuurent_seeker_id = Job_Seeker_Profiles.query.filter_by(user_id=user_id).first() 
+        print(user_id)
+        print(cuurent_seeker_id)
+
+        add_database = Applications(job_id=job_id,job_seeker_id=cuurent_seeker_id.id,status="applied") 
+            
+        db.session.add(add_database) 
+        db.session.commit()
 
     return render_template("job_application.html",jobs=jobs)
-
-
 
 
 @app.route("/job_seeker_logout")
@@ -234,9 +240,22 @@ def create_job():
         return redirect(url_for("employer"))
     return render_template("job_posting.html")
 
+@app.route("/view_applications",methods=["POST","GET"])
+def view_application():
+    user_id = session.get("user_id")
+    if not user_id:
+        return redirect (url_for("home"))
+    
+    applications = Applications.query.all()
+
+    return render_template("view_application.html",applications=applications)
+
+
+
 
 @app.route("/logout")
 def employer_logout():
+    session.clear()
     return redirect (url_for("home"))
 
 
